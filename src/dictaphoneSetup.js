@@ -4,6 +4,9 @@ var messageMode; // which type of message to listen to
 var noiseMessage = '', normalMessage = '', secretMessage = ''; // stores most recent versions of each message
 var noiseNormalMessage = '', normalSecretMessage = ''; // combination of two messages
 
+/*
+TODO: how to merge two lines together
+*/
 const Dictaphone1 = () => {
     const [message, setMessage] = useState('');
     const commands = [
