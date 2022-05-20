@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+var messageMode; // which type of message to listen to
+var noiseMessage = '', normalMessage = '', secretMessage = ''; // stores most recent versions of each message
+var noiseNormalMessage = '', normalSecretMessage = ''; // combination of two messages
 
 const Dictaphone1 = () => {
-    var messageMode; // which type of message to listen to
-    var noiseMessage, normalMessage, secretMessage; // stores most recent versions of each message
-
     const [message, setMessage] = useState('');
     const commands = [
         {
@@ -29,12 +29,15 @@ const Dictaphone1 = () => {
             console.log('Final transcript:', finalTranscript);
             if (messageMode === 'noise') {
                 noiseMessage = finalTranscript;
+                console.log("Noise: " + noiseMessage);
             }
             else if (messageMode === 'normal') {
                 normalMessage = finalTranscript;
+                console.log("Normal: " + normalMessage);
             }
             else if (messageMode === 'secret') {
                 secretMessage = finalTranscript;
+                console.log("Secret: " + secretMessage);
             }
         }
     }, [interimTranscript, finalTranscript]);
@@ -48,14 +51,17 @@ const Dictaphone1 = () => {
 
     const listenForNoise = () => {
         messageMode = 'noise';
+        noiseMessage = '';
         listenContinuously();
     }
     const listenForNormal = () => {
         messageMode = 'normal';
+        normalMessage = '';
         listenContinuously();
     }
     const listenForSecret = () => {
         messageMode = 'secret';
+        secretMessage = '';
         listenContinuously();
     }
     const listenContinuously = () => {
@@ -69,6 +75,15 @@ const Dictaphone1 = () => {
         SpeechRecognition.stopListening();
         resetTranscript();
     }
+
+    const clearAll = () => {
+        resetTranscript();
+        noiseMessage = '';
+        normalMessage = '';
+        secretMessage = '';
+        noiseNormalMessage = '';
+        normalSecretMessage = '';
+    }
     return (
         <div>
             <div>
@@ -76,7 +91,7 @@ const Dictaphone1 = () => {
                     {listening ? 'I\'m listening!' : 'Click "Noise/Normal/Secret" to start recording'}
                 </span>
             <div>
-                <button type="button" onClick={resetTranscript}>Clear</button>
+                <button type="button" onClick={clearAll}>Clear</button>
                 <button type="button" onClick={listenForNoise}>Noise</button>
                 <button type="button" onClick={listenForNormal}>Normal</button>
                 <button type="button" onClick={listenForSecret}>Secret</button>
@@ -94,6 +109,12 @@ const Dictaphone1 = () => {
             </div>
             <div>
                 Secret message: {secretMessage}
+            </div>
+            <div>
+                Noise + normal: {noiseNormalMessage}
+            </div>
+            <div>
+                Normal + secret: {normalSecretMessage}
             </div>
         </div>
     );
