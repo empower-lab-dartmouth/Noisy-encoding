@@ -3,9 +3,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 var messageMode; // which type of message to listen to
 var noiseNormalMessage = '', normalSecretMessage = ''; // combination of two messages
 var allMessages = '';
-/*
-TODO: how to merge two lines together
-*/
+
 const Dictaphone1 = () => {
     const [message, setMessage] = useState('');
     const commands = [
