@@ -3,6 +3,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 var messageMode; // which type of message to listen to
 var noiseNormalMessage = '', normalSecretMessage = ''; // combination of two messages
 var allMessages = '';
+var isListening = false;
 
 const Dictaphone1 = () => {
     const [message, setMessage] = useState('');
@@ -27,7 +28,7 @@ const Dictaphone1 = () => {
     useEffect(() => {
         if (finalTranscript !== '') {
             console.log('Final transcript:', finalTranscript);
-            allMessages = finalTranscript + '\r\n' + allMessages;
+            allMessages = finalTranscript + '\n' + allMessages;
             if (messageMode === 'noiseNormal') {
                 noiseNormalMessage = finalTranscript;
             }
@@ -44,14 +45,10 @@ const Dictaphone1 = () => {
         console.log('Your browser does not support speech recognition software! Try Chrome desktop, maybe?');
     }
 
-    const listenForNoiseNormal = () => {
-        messageMode = 'noiseNormal';
-        noiseNormalMessage = '';
-        listenContinuously();
-    }
-    const listenForNormalSecret = () => {
+    const listenForMessage = () => {
         messageMode = 'normalSecret';
         normalSecretMessage = '';
+        isListening = true;
         listenContinuously();
     }
     const listenContinuously = () => {
@@ -63,6 +60,7 @@ const Dictaphone1 = () => {
 
     const stopListening = () => {
         SpeechRecognition.stopListening();
+        isListening = false;
         resetTranscript();
     }
 
@@ -76,13 +74,11 @@ const Dictaphone1 = () => {
         <div>
             <div>
                 <span>
-                    {listening ? 'I\'m listening!' : 'Click a message type to start recording'}
+                    {listening ? 'I\'m listening!' : 'Waiting to record...'}
                 </span>
             <div>
                 <button type="button" onClick={clearAll}>Clear</button>
-                <button type="button" onClick={listenForNoiseNormal}>Noise + Normal</button>
-                <button type="button" onClick={listenForNormalSecret}>Normal + Secret</button>
-                <button type="button" onClick={stopListening}>Done</button>
+                <button type="button" onClick={isListening ? stopListening : listenForMessage}>{isListening ? "Done" : "Click to start recording"}</button>
             </div>
             </div>
             <div>
