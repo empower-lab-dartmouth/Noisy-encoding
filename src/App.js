@@ -2,7 +2,7 @@ import Dictaphone from './dictaphoneSetup.js'
 
 function App() {
   return (
-    <div className="App">
+    <div className="App grid background wrapper">
       <header className="Dictaphone-Tester">
         <Dictaphone />
       </header>
